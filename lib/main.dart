@@ -9,6 +9,9 @@ void main() {
   runApp(const MyApp());
 }
 
+
+/// Root widget for BikePlay.
+/// Mostly just sets up theming, naming and the header title.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -24,6 +27,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
+/// Main screen of the app.
+/// This is where most of the interaction lives.
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -44,12 +49,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final player = AudioPlayer();
 
+  /// Plays a short beep sound from assets.
   void _playBeep() async {
     await player.play(AssetSource('beep.mp3'));
   }
 
   bool _isFlashlightOn = false;
 
+  /// Toggles the phone flashlight on/off.
+  /// Requests camera permission if needed.
   Future<void> _toggleFlashlight() async {
     final status = await Permission.camera.request();
 
@@ -98,6 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
           permission == LocationPermission.whileInUse;
   }
 
+  /// Starts listening to GPS updates and computes a smoothed speed.
   void _startSpeedometer() async {
     final allowed = await _ensureLocationPermission();
     if (!allowed) return;
@@ -124,6 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  /// Stops listening to GPS updates. Called at dispose
   void _stopSpeedometer() {
     _positionStream?.cancel();
     _positionStream = null;
@@ -160,6 +170,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: GestureDetector(
+        // Swipe up anywhere to trigger a beep
+        // Double tap anywhere to trigger a flashlight state change
         behavior: HitTestBehavior.opaque,
         onVerticalDragEnd: (details) {
           if (details.velocity.pixelsPerSecond.dy < 0) {
