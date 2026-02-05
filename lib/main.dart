@@ -89,6 +89,15 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  bool _isPaused = false;
+
+  /// Toggles the device music on/off.
+  void _toggleSound() {
+    setState(() {
+      _isPaused = !_isPaused;
+    });
+  }
+
   StreamSubscription<Position>? _positionStream;
   double _speedMps = 0.0;
   final List<double> _speedBuffer = [];
@@ -202,9 +211,12 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           FloatingActionButton.large(
-            onPressed: _incrementCounter,
-            tooltip: 'Increment',
-            child: const Icon(Icons.add),
+            onPressed: _toggleSound,
+            tooltip: _isPaused ? 'Allow Audio' : 'Focus Mode',
+            child: Icon(
+              _isPaused ? Icons.play_arrow : Icons.pause,
+              size: 40,
+            ),
           ),
           const SizedBox(width: 16), // space between buttons
           FloatingActionButton.large(
